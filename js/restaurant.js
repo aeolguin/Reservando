@@ -1,3 +1,14 @@
+
+let sumatoria = function (numeros) {
+    let sumados = numeros.reduce((anterior , actual) => actual += anterior);
+return sumados
+}
+
+let promedio = function(numeros) {
+    let resultado = sumatoria(numeros) / numeros.length;
+    return Math.round(resultado * 10) / 10;
+}
+
 var Restaurant = function(id, nombre, rubro, ubicacion, horarios, imagen, calificaciones) {
     this.id = id;
     this.nombre = nombre;
@@ -9,16 +20,11 @@ var Restaurant = function(id, nombre, rubro, ubicacion, horarios, imagen, califi
 }
 
 Restaurant.prototype.reservarHorario = function(horarioReservado) {
-    for (var i = 0; i < this.horarios.length; i++) {
-        if (this.horarios[i] === horarioReservado) {
-            this.horarios.splice(i, 1);
-            return;
-        }
-    }
+    this.horarios = this.horarios.filter(horario => horario != horarioReservado)
 }
 
 Restaurant.prototype.calificar = function(nuevaCalificacion) {
-    if (Number.isInteger(nuevaCalificacion) && nuevaCalificacion > 0 && nuevaCalificacion < 10) {
+    if (Number.isInteger(nuevaCalificacion) && nuevaCalificacion > 0 && nuevaCalificacion <= 10) {
         this.calificaciones.push(nuevaCalificacion);
     }
 }
@@ -27,13 +33,7 @@ Restaurant.prototype.obtenerPuntuacion = function() {
     if (this.calificaciones.length === 0) {
         return 0;
     } else {
-        var sumatoria = 0;
-        for (var i = 0; i < this.calificaciones.length; i++) {
-            sumatoria += this.calificaciones[i]
-        }
-        var promedio = sumatoria / this.calificaciones.length;
-        return Math.round(promedio * 10) / 10;
+        return promedio(this.calificaciones);
     }
-
 }
 
