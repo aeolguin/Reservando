@@ -1,4 +1,7 @@
 const expect = chai.expect;
+//var reserva = new Reserva (new Date(2019,02,24,13,30),4,500,"DES15");
+//var reserva = new Reserva (new Date(2018, 7, 24, 11, 00), 8, 350, "DES1")
+var reserva = new Reserva (new Date(2018, 7, 27, 14, 100), 2, 150, "DES200")
 
 describe("Testeando la clase Restaurant" , function(){
 
@@ -74,6 +77,40 @@ describe("Testeando la clase Listado" , function(){
         for (let i=0; i<24; i++) { 
             expect(listado.restaurantes[i].nombre).to.eql(resultado[i].nombre);
         }
-    })  
+    })
+});  
 
-});
+    describe("Testeando la clase Reserva" , function(){
+    
+       
+
+        it("Se calcula el precio base en funcion de 4 personas y un precio base de $500", function(){
+            
+            var resultado = reserva.precioBase();
+            expect(resultado).to.be.equal(300);
+            
+        });
+
+
+        it("Se calcula el precio total de la reserva con 4 personas, ", function(){
+            
+            var resultado = reserva.precioFinal();
+            expect(resultado).to.be.equal(100);
+            
+        });
+
+        it("Se calcula el precio total de la reserva con 4 personas, con el adicional de horario ", function(){
+            
+            var resultado = precioFinal(4, 500, "ADIH");
+            expect(resultado).to.be.equal(2100);
+            
+        });
+
+        it("Se calcula el precio total de la reserva con 4 personas, con el adicional de fin de semana ", function(){
+            
+            var resultado = precioFinal(4, 500, "ADIS");
+            expect(resultado).to.be.equal(2100);
+            
+        });
+    });  
+
