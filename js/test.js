@@ -1,12 +1,9 @@
 const expect = chai.expect;
-//var reserva = new Reserva (new Date(2019,02,24,13,30),4,500,"DES15");
-//var reserva = new Reserva (new Date(2018, 7, 24, 11, 00), 8, 350, "DES1")
-var reserva = new Reserva (new Date(2018, 7, 27, 14, 100), 2, 150, "DES200")
+
 
 describe("Testeando la clase Restaurant" , function(){
 
-    const restaurante2 = listadoDeRestaurantes[2];
-    
+    const restaurante2 = listadoDeRestaurantes[2];  
 
     it("reservar Horario existente - La funcion debe eliminar un horario del array horarios", function(){
         //La funcion debe eliminar un horario del array horarios
@@ -64,10 +61,11 @@ describe("Testeando la clase Restaurant" , function(){
 
 describe("Testeando la clase Listado" , function(){
     let resultado = [];
+    var listado2 = new Listado(listadoDeRestaurantes)
 
     it("Existencia de un restaurante - La funcion chequea que exitan los 24 restaurantes", function(){
         for (let i=1; i<25; i++) { 
-            resultado.push(listado.buscarRestaurante(i));
+            resultado.push(listado2.buscarRestaurante(i));
         }
         expect(resultado).to.have.lengthOf(24);
         
@@ -75,41 +73,39 @@ describe("Testeando la clase Listado" , function(){
 
     it("Existencia de un restaurante - La funcion chequea q se devuelva el valor que corresponde al restaurante solicitado", function(){
         for (let i=0; i<24; i++) { 
-            expect(listado.restaurantes[i].nombre).to.eql(resultado[i].nombre);
+            expect(listado2.restaurantes[i].nombre).to.eql(resultado[i].nombre);
         }
     })
 });  
 
     describe("Testeando la clase Reserva" , function(){
     
-       
-
         it("Se calcula el precio base en funcion de 4 personas y un precio base de $500", function(){
-            
+            var reserva = new Reserva (new Date(2019,1,24,14,30),4,500,"DES15");
             var resultado = reserva.precioBase();
-            expect(resultado).to.be.equal(300);
+            expect(resultado).to.be.equal(2000);
             
         });
 
 
-        it("Se calcula el precio total de la reserva con 4 personas, ", function(){
-            
+        it("Se calcula el precio total de la reserva con 3 personas, precio de $500, hora pico y dia pico y descuento de $200", function(){
+            var reserva = new Reserva (new Date(2019,1,24,13,30),3,500,"DES200");
             var resultado = reserva.precioFinal();
-            expect(resultado).to.be.equal(100);
+            expect(resultado).to.be.equal(1525);
             
         });
 
-        it("Se calcula el precio total de la reserva con 4 personas, con el adicional de horario ", function(){
-            
-            var resultado = precioFinal(4, 500, "ADIH");
-            expect(resultado).to.be.equal(2100);
+        it("Se calcula el precio total de la reserva con 10 personas, horario y dia normal, sin ningun descuento adicional", function(){
+            var reserva = new Reserva (new Date(2019, 6, 29, 11, 00), 10, 500, "nada")
+            var resultado = reserva.precioFinal();
+            expect(resultado).to.be.equal(4250);
             
         });
 
-        it("Se calcula el precio total de la reserva con 4 personas, con el adicional de fin de semana ", function(){
-            
-            var resultado = precioFinal(4, 500, "ADIS");
-            expect(resultado).to.be.equal(2100);
+        it("Se intenta generar una reserva con 0 personas ", function(){
+            var reserva = new Reserva (new Date(2019, 6, 29, 11, 00), 0, 500, "nada")
+            var resultado = reserva.precioFinal();
+            expect(resultado).to.be.equal(0);
             
         });
     });  
