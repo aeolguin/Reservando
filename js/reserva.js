@@ -8,7 +8,17 @@ var Reserva = function(horario, cantidadDePersonas, precioPorPersona, codigoDeDe
 // Funcion que calcula el precio Base de una reserva en función de la cantidad de personas y el precio 
 //por persona
 Reserva.prototype.precioBase = function () {
+    if (this.chequeoDePersonas()){
     return this.cantidadDePersonas * this.precioPorPersona
+    }else {
+        swal({
+            title: "Error",
+            text: "Ingrese una cantidad de Personas para la reserva",
+            icon: "error",
+            button: "Continuar",
+        });
+        return 0
+    }
 }
 
 // Función que calcula un adicional a la reserva según horarios pico y días pico
@@ -17,9 +27,11 @@ Reserva.prototype.precioBase = function () {
 Reserva.prototype.adicionalReserva = function () {
     var porcentaje = 0;
     if ((this.horario.getHours() >= 13) && (this.horario.getHours() <= 14) || (this.horario.getHours() >= 19) && (this.horario.getHours() <= 22)) {
+        
         porcentaje += adicionales.horapico;
     } 
     if ((this.horario.getDay() === 0) || (this.horario.getDay() === 7)) {
+        
         porcentaje += adicionales.diaspico;
     }
     var adicional = (this.precioBase() * porcentaje / 100);
@@ -64,9 +76,13 @@ Reserva.prototype.precioFinal = function () {
     return this.precioBase() - this.calculoDescuentos() + this.adicionalReserva()
 }
 
+Reserva.prototype.chequeoDePersonas = function () {
+    if (this.cantidadDePersonas === 0) {
+        return false
+    }else {
+        return true
+    }
 
-//var reserva = new Reserva ((document.getElementById("horario").value) ,(document.getElementById("cantidadDePersonas").value),
-//(document.getElementById("precioPorPersona").value), (document.getElementById("codigoDeDescuento").value))
+}
 
-//this.codigoDeDescuento.hasOwnProperty(valor) - devuleve true si existe
-
+var reserva = new Reserva (new Date(2019,1,24,13,30),3,500,"DES200");

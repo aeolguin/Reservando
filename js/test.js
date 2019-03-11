@@ -88,7 +88,7 @@ describe("Testeando la clase Listado" , function(){
         });
 
 
-        it("Se calcula el precio total de la reserva con 3 personas, precio de $500, hora pico y dia pico y descuento de $200", function(){
+        it("Se calcula el precio total de la reserva con 3 personas, precio de $500, hora pico y dia pico (24 de febrero de 2019) y descuento de $200", function(){
             var reserva = new Reserva (new Date(2019,1,24,13,30),3,500,"DES200");
             var resultado = reserva.precioFinal();
             expect(resultado).to.be.equal(1525);
