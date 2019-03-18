@@ -127,54 +127,74 @@ Aplicacion.prototype.reservarUnHorario = function(restaurant, horario) {
     if (cantidadHorarios === 1) {
         restaurantActualizar.find(".reserva").html("No hay más mesas disponibles 😪")
     }
-    // Se elimina el horario de lista para tomar
-    horarioASacar.remove();
+    
 
     //Se hace el alta de lo necesario para crear una nueva reserva
-    var descuento;
-    var fecha = new Date (2019 , (prompt("ingrese el mes de la reserva") - 1), prompt("ingrese el día de la reserva"), 
-                            horario.charAt(0)+horario.charAt(1),horario.charAt(3)+horario.charAt(4))
-    
-    var integrantes = function () {
-        var z = 0
-        while (z < 1) {
-        var ingreso = prompt("ingrese la cantidad de comensales")
-        if (ingreso > 0 && ingreso != undefined){
-            z = 2
-            return ingreso
-        }else {
-            z = 0
+    Swal.mixin({
+        input: 'text',
+        confirmButtonText: 'Next &rarr;',
+        showCancelButton: true,
+        progressSteps: ['1', '2', '3', '4']
+      }).queue([
+        {
+          title: 'Ingresa el Mes de tu Reserva para el 2019',
+          input: 'range',
+            inputAttributes: {
+                  min: 1,
+                  max: 12,
+                  step: 1
+                },
+                inputValue: 1
+        },
+        {
+            title: 'Ingresa el día de tu Reserva para el 2019',
+            input: 'range',
+            inputAttributes: {
+                  min: 1,
+                  max: 31,
+                  step: 1
+                },
+                inputValue: 1
+          },
+        {
+            title: "IIngresa la cantidad de comensales",
+            input: 'range',
+            inputAttributes: {
+                  min: 1,
+                  max: 30,
+                  step: 1
+                },
+                inputValue: 1
+        },
+        {
+            title: "Ingresa tu cupon de descuento",
+            input: 'select',
+            inputOptions: {
+              'DES200': 'Descuento de $200',
+              'DES1': 'Descuento de 1 comensal',
+              'DES15': 'Descuento de 15%',
+              'NADA': 'No aplicar descuento',             
+            },
         }
+        
+      ]).then((result) => {
+        if (result.value) {
+            var fecha = new Date (2019 , (result.value[0] - 1), result.value[1], 
+                        horario.charAt(0)+horario.charAt(1),horario.charAt(3)+horario.charAt(4))
+            var reserva = new Reserva(fecha,result.value[2],"500",result.value[3]) 
+
+    // Se elimina el horario de lista para tomar
+            horarioASacar.remove();                          
+
+          Swal.fire({
+            title: "!Felicitaciones!",
+            text: "Has reservado una mesa en " + restaurant.nombre + " a las " + fecha + 
+            "\n El precio base de la reserva es $" + reserva.precioBase() + "\n El valor total de la reserva es de $" +
+            reserva.precioFinal(),
+          })
+        }
+      });
     }
-    }();
-    var precio = prompt("ingrese el precio por comensal")
-    var switchDescuento = prompt("ingrese el codigo de descuento que se desea aplicar \n" +
-                    "1 - Descuento del 15% \n" + 
-                    "2 - Descuento de $200 \n" +
-                    "3 - Descuento de 1 Comensal \n" +
-                    "4 - No aplicar descuento ")
-    switch (switchDescuento) {
-        case 1 :
-        descuento = "DES15"
-        case 2 :
-        descuento = "DES200"
-        case 3 :
-        descuento = "DES1"
-        case 4 :
-        descuento = ""
-    }
-    
-    var reserva = new Reserva(fecha,integrantes,precio,descuento)
-    
-    swal({
-        title: "!Felicitaciones!",
-        text: "Has reservado una mesa en " + restaurant.nombre + " a las " + horario + 
-        "\n El precio base de la reserva es " + reserva.precioBase() + "\n El valor total de la reserva es de " +
-         reserva.precioFinal(),
-        icon: "success",
-        button: "Continuar",
-    });
-}
 
 //Esta función se encarga de generar las opciones del filtro de las ciudades.
 Aplicacion.prototype.dibujarCiudades = function() {
@@ -250,5 +270,6 @@ Aplicacion.prototype.filtrarRestaurantes = function() {
     var restaurantesFiltrados = this.listado.obtenerRestaurantes(filtroRubro, filtroCiudad, filtroHorario);
     this.dibujarListado(restaurantesFiltrados);
 }
+
 
 var aplicacion = new Aplicacion(listado);
